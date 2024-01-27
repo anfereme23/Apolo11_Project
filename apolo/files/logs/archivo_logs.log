@@ -1,0 +1,7 @@
+2024-01-27 13:44:56,128 [INFO] Error creando la misión: 'Logger' object has no attribute 'Error'
+2024-01-27 13:45:31,587 [INFO] Archivo 'APL-TMRS-1-27012024134531.log' generado en '/Users/alejafranco/Development/BootcampPython/Apolo11_Project/apolo/files/devices/ciclo-001/APL-TMRS-1-27012024134531.log'
+2024-01-27 13:45:31,587 [INFO] Archivo 'APL-GALXONE-2-27012024134531.log' generado en '/Users/alejafranco/Development/BootcampPython/Apolo11_Project/apolo/files/devices/ciclo-001/APL-GALXONE-2-27012024134531.log'
+2024-01-27 13:45:36,595 [INFO] Archivo 'APL-UNKN-1-27012024134536.log' generado en '/Users/alejafranco/Development/BootcampPython/Apolo11_Project/apolo/files/devices/ciclo-002/APL-UNKN-1-27012024134536.log'
+2024-01-27 13:45:36,596 [INFO] Archivo 'APL-CLNM-2-27012024134536.log' generado en '/Users/alejafranco/Development/BootcampPython/Apolo11_Project/apolo/files/devices/ciclo-002/APL-CLNM-2-27012024134536.log'
+2024-01-27 13:45:41,602 [INFO] Archivo 'APL-UNKN-1-27012024134541.log' generado en '/Users/alejafranco/Development/BootcampPython/Apolo11_Project/apolo/files/devices/ciclo-003/APL-UNKN-1-27012024134541.log'
+2024-01-27 13:45:41,603 [INFO] Archivo 'APL-CLNM-2-27012024134541.log' generado en '/Users/alejafranco/Development/BootcampPython/Apolo11_Project/apolo/files/devices/ciclo-003/APL-CLNM-2-27012024134541.log'
