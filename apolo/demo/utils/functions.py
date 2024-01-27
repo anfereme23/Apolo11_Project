@@ -76,7 +76,7 @@ def gen_missions(number_files: int, second_interval: int, config: str):
         path = os.getcwd()
         path_devices = f"{path}/files/devices"
         path_reports = f"{path}/files/reports"
-        path_backup = f"{path}files/backup"
+        path_backup = f"{path}files/backups"
         path_logs = f"{path}/files/logs"
         logger = gen_logger(path_logs)
 

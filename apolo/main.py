@@ -13,7 +13,7 @@ config = read_yaml(path_yaml)
 parser = argparse.ArgumentParser(
     description="Generador de números aleatorios en rango (archivos) y tiempo de ejecucion"
 )
-# Argumento inicial para generar archivos
+# Argumento numero inicial para generar archivos
 parser.add_argument(
     "--inicial",
     type=int,
@@ -21,7 +21,7 @@ parser.add_argument(
     help="Limite inferior del rango",
 )
 
-# Argumento final para generar archivos
+# Argumento numero final para generar archivos
 parser.add_argument(
     "--final",
     type=int,
@@ -42,4 +42,7 @@ args = parser.parse_args()
 # Genera numero de archivos aleatorio
 number_files = get_random_number(args.inicial, args.final)
 print(f"Number of files: {number_files}")
+
+# Envía el numero de archivos, el intervalo de tiempo del ciclo y el archivo configuración
+# Para empezar a crear las misiones
 gen_missions(number_files, args.second_interval, config)

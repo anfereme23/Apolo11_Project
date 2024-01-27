@@ -1,9 +1,0 @@
-TODO:
-
-Validar si hay SysArgs
-Manejo de TYPING
-COVERAGE TESTS
-PRUEBAS UNITARIAS
-FLAKE8
-(Hacer validaciones)
-POO
