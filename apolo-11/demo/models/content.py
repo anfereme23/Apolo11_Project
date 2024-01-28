@@ -7,7 +7,7 @@ class Content:
         mission: str,
         device_type: str,
         device_status: str,
-        hash: int = None,
+        hash: str = None,
     ):
         """
         Constructor de la clase Content.
