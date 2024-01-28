@@ -1,0 +1,47 @@
+file_date_format: "%d%m%Y%H%M%S"
+
+second_interval: 5
+
+missions:
+  1: ORBONE
+  2: CLNM
+  3: TMRS
+  4: GALXONE
+  5: UNKN
+
+missions_name:
+  1: OrbitOne
+  2: ColonyMoon
+  3: VacMars
+  4: GalaxyTwo
+  5: Unknown
+
+device_types:
+  1: Satelite
+  2: Nave
+  3: Vehiculo espacial
+  4: unknown
+
+device_status:
+  1: excellent
+  2: good
+  3: warning
+  4: faulty
+  5: killed
+  6: unknown
+
+random_number_files:
+  inicial: 1
+  final: 100
+
+random_number_missions:
+  inicial: 1
+  final: 5
+
+random_number_device_types:
+  inicial: 1
+  final: 4
+
+random_number_device_status:
+  inicial: 1
+  final: 6
