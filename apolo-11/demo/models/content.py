@@ -21,7 +21,7 @@ class Content:
         :param device_status: Estado del dispositivo.
         :type device_status: str
         :param hash: Valor hash.
-        :type hash: int
+        :type hash: str
 
         """
         self.date = date

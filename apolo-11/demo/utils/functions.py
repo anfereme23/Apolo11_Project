@@ -84,6 +84,7 @@ def gen_missions(number_files: int, second_interval: int, config: dict):
         path_reports = f"{path}/files/reports"
         path_backup = f"{path}files/backups"
         path_logs = f"{path}/files/logs"
+        # Genera el achivo log
         logger = gen_logger(path_logs)
 
         ciclo = 1
@@ -98,7 +99,7 @@ def gen_missions(number_files: int, second_interval: int, config: dict):
                 # Genera una fecha con el formato especificado en el archivo de configuración
                 date = datetime.now().strftime(config["file_date_format"])
 
-                # Genera un números aleatorios para los datos
+                # Genera un numero aleatorio para los datos en el archivo de configuración
                 random_mision_number = get_random_number(
                     config["random_number_missions"]["inicial"],
                     config["random_number_missions"]["final"],
@@ -120,6 +121,7 @@ def gen_missions(number_files: int, second_interval: int, config: dict):
                 # Genera el nombre del archivo
                 mission = config["missions"].get(random_mision_number)
                 file_name = f"APL-{mission}-{i}-{date}.log"
+                # Genera la ruta del archivo dentro de ciclo
                 file_path = os.path.join(path_ciclo, file_name)
 
                 # Genera el content del archivo
