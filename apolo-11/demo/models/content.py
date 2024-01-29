@@ -1,5 +1,5 @@
 class Content:
-    """Clase que representa el contenido de algún objeto."""
+    """Clase que representa el contenido de los archivos de un ciclo."""
 
     def __init__(
         self,

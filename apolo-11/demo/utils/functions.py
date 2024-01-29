@@ -8,6 +8,7 @@ from datetime import datetime
 from yaml.loader import SafeLoader
 from demo.models.content import Content
 from typing import Dict
+import pandas as pd
 
 
 def gen_logger(path_logs: str):
@@ -90,15 +91,18 @@ def gen_missions(number_files: int, second_interval: int, config: dict):
         # Genera el achivo log
         logger = gen_logger(path_logs)
 
+        # Inicializamos el ciclo
         ciclo = 1
+        # Lista de archivos YAML para generar los reportes
+        files = []
         while True:
             # Genera una subcarpeta con el nombre del ciclo
             path_ciclo = f"{path_devices}/ciclo-00{ciclo}"
             gen_folder(path_ciclo, logger)
 
             # Genera el número de reportes por ciclo
-            # TODO: cambiar 3 por el "number_files" (por ahora genera 2 archivos para probar)
-            for i in range(1, 3):
+            # TODO: cambiar 6 por el "number_files" (por ahora genera 2 archivos para probar)
+            for i in range(1, 6):
                 # Genera una fecha con el formato especificado en el archivo de configuración
                 date = datetime.now().strftime(config["file_date_format"])
 
@@ -147,10 +151,49 @@ def gen_missions(number_files: int, second_interval: int, config: dict):
                 # Crea el archivo
                 gen_file(file_path, content)
                 logger.info(f"Archivo '{file_name}' generado en '{file_path}'")
+                files.append(file_path)
 
+            # Genera los reportes
+            gen_report_event_analysis(files, ciclo, path_reports, date)
             # Incrementa el iterador del ciclo y ejecuta el siguiente en el intervalo de tiempo establecido
             ciclo += 1
             time.sleep(second_interval)
 
     except Exception as e:
         logger.error(f"Error creando la misión: {e}")
+
+
+def gen_report_event_analysis(list_files: list, ciclo: int, path: str, date: str):
+    # Genera el reporte de análisis de eventos
+    data = []
+    for archivo in list_files:
+        with open(archivo, "r") as file:
+            content_dict = yaml.safe_load(file)
+            data.append(content_dict)
+    df = pd.DataFrame(data)
+
+    # Inicializar un diccionario para almacenar el análisis
+    analisis_estado_dispositivo = {}
+
+    # Iterar sobre cada fila del DataFrame
+    for _, row in df.iterrows():
+        misión = row["mission"]
+        dispositivo = row["device_type"]
+        estado = row["device_status"]
+
+        # Inicializar las claves si no existen
+        if misión not in analisis_estado_dispositivo:
+            analisis_estado_dispositivo[misión] = {}
+
+        if dispositivo not in analisis_estado_dispositivo[misión]:
+            analisis_estado_dispositivo[misión][dispositivo] = {}
+
+        # Incrementar el conteo del estado correspondiente
+        analisis_estado_dispositivo[misión][dispositivo].setdefault(estado, 0)
+        analisis_estado_dispositivo[misión][dispositivo][estado] += 1
+
+    # Guardar el diccionario en formato YAML
+    with open(
+        f"{path}/APLSTATS-analisis_estado_dispositivo-{date}-00{ciclo}.yaml", "w"
+    ) as yaml_file:
+        yaml.dump(analisis_estado_dispositivo, yaml_file, default_flow_style=False)

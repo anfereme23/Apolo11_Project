@@ -39,8 +39,8 @@ parser.add_argument(
 # Analizar argumentos
 args = parser.parse_args()
 
-if args.inicial | args.final | args.second_interval < 0:
-    print("No se permiten números negativos")
+if args.inicial | args.final | args.second_interval < 1:
+    print("El número debe ser mayor a 0")
     exit()
 
 # Genera numero de archivos aleatorio
