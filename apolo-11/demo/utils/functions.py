@@ -47,8 +47,11 @@ def get_random_number(n1: int, n2: int) -> int:
 
 
 def gen_hash(date: str, mission: str, device_type: str, device_status: str):
-    hash_object = hashlib.sha256().hexdigest()
-    return f"{hash_object}{date}{mission}{device_type}{device_status}"
+    hash_object = hashlib.sha256()
+    concat = f"{date}{mission}{device_type}{device_status}"
+    hash_object.update(concat.encode())
+    result = hash_object.hexdigest()
+    return result
 
 
 def gen_file(file_name: str, content: Content):
@@ -125,20 +128,20 @@ def gen_missions(number_files: int, second_interval: int, config: dict):
                 file_path = os.path.join(path_ciclo, file_name)
 
                 # Genera el content del archivo
-                if mission_name == "Unknown":
-                    content = Content(
-                        date=date,
-                        mission=mission_name,
-                        device_type="unknown",
-                        device_status="unknown",
-                        hash=gen_hash(date, mission_name, "unknown", "unknown"),
-                    )
-                else:
+                if mission_name != "Unknown":
                     content = Content(
                         date=date,
                         mission=mission_name,
                         device_type=device_type,
                         device_status=device_status,
+                        hash=gen_hash(date, mission_name, device_type, device_status),
+                    )
+                else:
+                    content = Content(
+                        date=date,
+                        mission=mission_name,
+                        device_type="unknown",
+                        device_status="unknown",
                     )
 
                 # Crea el archivo
