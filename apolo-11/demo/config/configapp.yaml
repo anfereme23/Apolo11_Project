@@ -1,6 +1,6 @@
 file_date_format: "%d%m%Y%H%M%S"
 
-second_interval: 5
+second_interval: 20
 
 missions:
   1: ORBONE
