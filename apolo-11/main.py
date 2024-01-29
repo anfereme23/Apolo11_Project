@@ -40,7 +40,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 if args.inicial | args.final | args.second_interval < 1:
-    print("El número debe ser mayor a 0")
+    print("Los números debe ser mayor a 0")
     exit()
 
 # Genera numero de archivos aleatorio
