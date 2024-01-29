@@ -9,6 +9,7 @@ from yaml.loader import SafeLoader
 from demo.models.content import Content
 from typing import Dict
 import pandas as pd
+import shutil
 
 
 def gen_logger(path_logs: str):
@@ -86,7 +87,7 @@ def gen_missions(number_files: int, second_interval: int, config: dict):
         path = os.getcwd()
         path_devices = f"{path}/files/devices"
         path_reports = f"{path}/files/reports"
-        path_backup = f"{path}files/backups"
+        path_backup = f"{path}/files/backups"
         path_logs = f"{path}/files/logs"
         # Genera el achivo log
         logger = gen_logger(path_logs)
@@ -94,8 +95,8 @@ def gen_missions(number_files: int, second_interval: int, config: dict):
         # Inicializamos el ciclo
         ciclo = 1
         # Lista de archivos YAML para generar los reportes
-        files = []
         while True:
+            files = []
             # Genera una subcarpeta con el nombre del ciclo
             path_ciclo = f"{path_devices}/ciclo-00{ciclo}"
             gen_folder(path_ciclo, logger)
@@ -153,8 +154,18 @@ def gen_missions(number_files: int, second_interval: int, config: dict):
                 logger.info(f"Archivo '{file_name}' generado en '{file_path}'")
                 files.append(file_path)
 
+            # Genera una subcarpeta con el nombre del ciclo para los reportes
+            path_ciclo_report = f"{path_reports}/ciclo-00{ciclo}-{date}"
+            gen_folder(path_ciclo_report, logger)
+
             # Genera los reportes
-            gen_report_event_analysis(files, ciclo, path_reports, date)
+            gen_report_event_analysis(files, ciclo, path_ciclo_report, date)
+            gen_report_disconnect_analysis(files, ciclo, path_ciclo_report, date)
+
+            # Mueve carpeta ciclo a backups
+            nombre_carpeta_actual = f"{os.path.basename(path_ciclo)}-{date}"
+            shutil.move(path_ciclo, f"{path_backup}-{nombre_carpeta_actual}")
+
             # Incrementa el iterador del ciclo y ejecuta el siguiente en el intervalo de tiempo establecido
             ciclo += 1
             time.sleep(second_interval)
@@ -197,3 +208,43 @@ def gen_report_event_analysis(list_files: list, ciclo: int, path: str, date: str
         f"{path}/APLSTATS-analisis_estado_dispositivo-{date}-00{ciclo}.yaml", "w"
     ) as yaml_file:
         yaml.dump(analisis_estado_dispositivo, yaml_file, default_flow_style=False)
+
+
+def gen_report_disconnect_analysis(list_files: list, ciclo: int, path: str, date: str):
+    # Genera el reporte de análisis de desconexiones
+    data = []
+
+    # Iterar sobre los archivos yaml
+    for archivo in list_files:
+        with open(archivo, "r") as file:
+            content_dict = yaml.safe_load(file)
+            data.append(content_dict)
+
+    # Crear DataFrame a partir de la lista de datos
+    df = pd.DataFrame(data)
+
+    # Filtrar las filas con estado "unknown"
+    df_unknown = df[df["device_status"] == "unknown"]
+
+    # Agrupar por misión y dispositivo y contar desconexiones
+    analisis_desconexiones = (
+        df_unknown.groupby(["mission", "device_type"]).size().reset_index(name="count")
+    )
+
+    # Crear el diccionario final en el formato deseado
+    resultado_desconexiones = {}
+    for _, row in analisis_desconexiones.iterrows():
+        mision = row["mission"]
+        dispositivo = row["device_type"]
+        count = row["count"]
+
+        if mision not in resultado_desconexiones:
+            resultado_desconexiones[mision] = {}
+
+        # Asignar la cantidad de desconexiones para el dispositivo
+        resultado_desconexiones[mision][dispositivo] = count
+
+    # Guardar el diccionario en formato YAML
+    filename = f"APLSTATS-analisis_desconexiones-{date}-00{ciclo}.yaml"
+    with open(os.path.join(path, filename), "w") as yaml_file:
+        yaml.dump(resultado_desconexiones, yaml_file, default_flow_style=False)
