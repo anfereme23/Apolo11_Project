@@ -161,6 +161,7 @@ def gen_missions(number_files: int, second_interval: int, config: dict):
             # Genera los reportes
             gen_report_event_analysis(files, ciclo, path_ciclo_report, date)
             gen_report_disconnect_analysis(files, ciclo, path_ciclo_report, date)
+            gen_report_percentage(files, ciclo, path_ciclo_report, date)
 
             # Mueve carpeta ciclo a backups
             nombre_carpeta_actual = f"{os.path.basename(path_ciclo)}-{date}"
@@ -248,3 +249,32 @@ def gen_report_disconnect_analysis(list_files: list, ciclo: int, path: str, date
     filename = f"APLSTATS-analisis_desconexiones-{date}-00{ciclo}.yaml"
     with open(os.path.join(path, filename), "w") as yaml_file:
         yaml.dump(resultado_desconexiones, yaml_file, default_flow_style=False)
+
+
+def gen_report_percentage(list_files: list, ciclo: int, path: str, date: str):
+    data = []
+    # Recorre todas las list_files y carga los datos en un DataFrame
+    for archivo in list_files:
+        with open(archivo, "r") as file:
+            content_dict = yaml.safe_load(file)
+            data.append(content_dict)
+
+    # Crea un DataFrame a partir de los datos
+    df = pd.DataFrame(data)
+
+    # Calcula el porcentaje de participación por misión
+    porcentaje_mision = (df["mission"].value_counts(normalize=True) * 100).to_dict()
+
+    # Calcula el porcentaje de participación por dispositivo
+    porcentaje_dispositivo = (
+        df["device_type"].value_counts(normalize=True) * 100
+    ).to_dict()
+
+    # Guarda los resultados en un archivo YAML
+    resultado_porcentajes = {
+        "porcentaje_mision": porcentaje_mision,
+        "porcentaje_dispositivo": porcentaje_dispositivo,
+    }
+
+    with open(f"{path}/APLSTATS-porcentajes-{date}-00{ciclo}.yaml", "w") as yaml_file:
+        yaml.dump(resultado_porcentajes, yaml_file, default_flow_style=False)
