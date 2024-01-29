@@ -102,8 +102,8 @@ def gen_missions(number_files: int, second_interval: int, config: dict):
             gen_folder(path_ciclo, logger)
 
             # Genera el número de reportes por ciclo
-            # TODO: cambiar 6 por el "number_files" (por ahora genera 2 archivos para probar)
-            for i in range(1, 6):
+            # TODO: cambiar segundo numero por el "number_files"
+            for i in range(1, number_files + 1):
                 # Genera una fecha con el formato especificado en el archivo de configuración
                 date = datetime.now().strftime(config["file_date_format"])
 
